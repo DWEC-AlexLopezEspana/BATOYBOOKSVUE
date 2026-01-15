@@ -1,6 +1,10 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import AppMenu from './components/AppMenu.vue'
+import AppMessages from './components/AppMessages.vue';
+import BooksList from './components/BooksList.vue';
+import BookForm from './components/BookForm.vue';
+import AppAbout from './components/AppAbout.vue';
+
 </script>
 
 <template>
@@ -8,16 +12,22 @@ import HelloWorld from './components/HelloWorld.vue'
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+      <AppMenu />
     </div>
-  </header>
 
-  <RouterView />
+  </header>
+  <main>
+
+    <AppMessages />
+    <BooksList />
+    <BookForm />
+    <AppAbout />
+
+  </main>
+
+
+
+
 </template>
 
 <style scoped>
