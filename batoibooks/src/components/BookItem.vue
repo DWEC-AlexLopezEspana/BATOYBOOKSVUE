@@ -14,7 +14,7 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['borrarLibro']);
+const emit = defineEmits(['borrarLibro','editLibro']);
 
 onMounted(async () => {
     await modulos.allModulos();
@@ -34,6 +34,9 @@ const nombreModulo = computed(() => {
 
 const delLibro = () =>{
     emit('borrarLibro', props.libro.id);
+}
+const editLibro = () =>{
+    emit('editLibro',props.libro);
 }
 
 
@@ -62,7 +65,7 @@ const delLibro = () =>{
             <p>{{ libro.price }}€</p>
         </div>
         <button>🛒</button>
-        <button>✏️</button>
+        <button @click="editLibro">✏️</button>
         <button @click="delLibro">🗑️</button>
     </div>
 

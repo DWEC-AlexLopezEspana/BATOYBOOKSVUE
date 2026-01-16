@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { store as modulos } from '../stores/modulos.js';
 import { store as libros } from '../stores/libros.js';
 
@@ -19,25 +19,53 @@ const nuevoLibro = reactive({
     photo: '',
     soldDate: ''
 });
+const libro = computed(() => libros.state.libroEnEdicion);
+const esEdicion = computed(() => libros.state.libroEnEdicion !== null);
+
+watch(
+    () => libros.state.libroEnEdicion,
+    (libro) => {
+        if (libro) {
+            Object.assign(nuevoLibro, libro);
+        }
+    }
+)
 
 
 
 const resetearFormulario = () => {
-        nuevoLibro.id= null,
-        nuevoLibro.idModule= '',
-        nuevoLibro.publisher= '',
-        nuevoLibro.price= 0,
-        nuevoLibro.pages= 0,
-        nuevoLibro.status= 'Nuevo',
-        nuevoLibro.comments= '',
-        nuevoLibro.photo= '',
-        nuevoLibro.soldDate= ''
+    Object.assign(nuevoLibro, {
+        id: null,
+        idModule: '',
+        publisher: '',
+        price: 0,
+        pages: 0,
+        status: 'Nuevo',
+        comments: '',
+        photo: '',
+        soldDate: ''
+    });
+    libros.limpiarLibroEnEdicion();
+}
+const generarId = () => {
+    if (libros.state.libros.length === 0) return 1; // Si no hay libros, empezamos en 1
+    const maxId = Math.max(...libros.state.libros.map(l => l.id || 0));
+    return maxId + 1;
 }
 
+
 const crearLibro = async () => {
-    await libros.addLibro(nuevoLibro);
+    if (esEdicion.value) {
+        await libros.updateLibro(nuevoLibro);
+        libros.limpiarLibroEnEdicion();
+    } else {
+        nuevoLibro.id = generarId();
+        await libros.addLibro(nuevoLibro);
+    }
+
     resetearFormulario();
 }
+
 
 </script>
 
@@ -47,7 +75,7 @@ const crearLibro = async () => {
         <form @submit.prevent="crearLibro">
             <div>
                 <h4>ID:</h4>
-                <input placeholder="ID del libro">
+                <input placeholder="ID del libro" v-model="id">
             </div>
             <div>
                 <h4>Module:</h4>
@@ -77,17 +105,19 @@ const crearLibro = async () => {
             </div>
             <div>
                 <h4>Estado</h4>
-                <label><input type="radio" value="Nuevo" v-model="nuevoLibro.status">Nuevo</label>
-                <label><input type="radio" value="Bueno" v-model="nuevoLibro.status">Bueno</label>
-                <label><input type="radio" value="Malo" v-model="nuevoLibro.status">Malo</label>
-                <label><input type="radio" value="Digital" v-model="nuevoLibro.status">Digital</label>
+                <label><input type="radio" value="new" v-model="nuevoLibro.status">Nuevo</label>
+                <label><input type="radio" value="good" v-model="nuevoLibro.status">Bueno</label>
+                <label><input type="radio" value="bad" v-model="nuevoLibro.status">Malo</label>
+                <label><input type="radio" value="digital" v-model="nuevoLibro.status">Digital</label>
             </div>
             <div>
                 <h4 for="comentario">Comentarios</h4>
-                <textarea v-model="nuevoLibro.comments" rows="4" cols="50" placeholder="Escribe tu comentario aquí..."></textarea>
+                <textarea v-model="nuevoLibro.comments" rows="4" cols="50"
+                    placeholder="Escribe tu comentario aquí..."></textarea>
             </div>
             <div>
-                <button type="submit">Guardar</button>
+                <button type="submit" v-if="esEdicion">Actualizar</button>
+                <button type="submit" v-else>Guardar</button>
                 <button type="reset" @click="resetearFormulario">Reset</button>
 
             </div>

@@ -4,7 +4,6 @@ import AppMessages from './components/AppMessages.vue';
 import BooksList from './components/BooksList.vue';
 import BookForm from './components/BookForm.vue';
 import AppAbout from './components/AppAbout.vue';
-
 </script>
 
 <template>
@@ -21,7 +20,7 @@ import AppAbout from './components/AppAbout.vue';
 
     <AppMessages />
     <BooksList />
-    <BookForm />
+    <BookForm  />
     <AppAbout />
 
   </main>
