@@ -2185,6 +2185,17 @@
       "comments": "",
       "soldDate": "",
       "id": "10"
+    },
+    {
+      "id": null,
+      "idModule": "0012",
+      "publisher": "alexBooks",
+      "price": 35,
+      "pages": 200,
+      "status": "Bueno",
+      "comments": "Este es un lirbo para hacer una prueba",
+      "photo": "",
+      "soldDate": ""
     }
   ]
 }
