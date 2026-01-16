@@ -21,7 +21,7 @@ onMounted(async () => {
 const borrarLibro = async (idLibro) => {
     const respuesta = confirm(`¿Desea borrar el libro con ID:${idLibro}`);
     if (respuesta) {
-        await libros.removeLibro(idLibro);
+        await libros.removeLibro(String(idLibro));
     }
 }
 const editLibro = async (libro) => {
