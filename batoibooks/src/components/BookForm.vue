@@ -59,7 +59,7 @@ const crearLibro = async () => {
         await libros.updateLibro(nuevoLibro);
         libros.limpiarLibroEnEdicion();
     } else {
-        nuevoLibro.id = generarId();
+        nuevoLibro.id = String(generarId());
         await libros.addLibro(nuevoLibro);
     }
 

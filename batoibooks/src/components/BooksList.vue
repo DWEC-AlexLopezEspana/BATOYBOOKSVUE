@@ -10,7 +10,7 @@ const totalLibros = computed(() => libros.state.libros.length);
 
 const totalImporte = computed(() => {
     return libros.state.libros.reduce((acc, libro) => {
-        return acc + (libro.price || 0); // si no hay price, suma 0
+        return acc + (libro.price || 0);
     }, 0);
 });
 
@@ -21,7 +21,7 @@ onMounted(async () => {
 const borrarLibro = async (idLibro) => {
     const respuesta = confirm(`¿Desea borrar el libro con ID:${idLibro}`);
     if (respuesta) {
-        await libros.removeLibro(String(idLibro));
+        await libros.removeLibro(idLibro);
     }
 }
 const editLibro = async (libro) => {

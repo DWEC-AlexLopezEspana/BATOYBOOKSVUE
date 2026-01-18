@@ -42,8 +42,8 @@ export const store = {
         try {
             if (this.debug) console.log("removeLibro triggered with id", idLibro);
             await api.libros.delete(idLibro);
-            const idNum = Number(idLibro); // Asegura que coincidan los tipos
-            this.state.libros = this.state.libros.filter(l => Number(l.id) !== idNum);
+            const idNum = idLibro;
+            this.state.libros = this.state.libros.filter(l => Number(l.id) !== Number(idNum));
         } catch (error) {
              this.agregarMensaje(`Error al eliminar libro con id ${idLibro}:${error}`, "error");
         }
