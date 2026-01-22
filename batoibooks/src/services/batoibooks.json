@@ -2127,16 +2127,16 @@
   ],
   "books": [
     {
-      "idUser": 3,
+      "id": "6",
       "idModule": "0376",
       "publisher": "McGraw-Hill",
-      "price": 75,
-      "pages": 273,
+      "price": 25,
+      "pages": 2,
       "status": "new",
-      "photo": "9788448626662.jpeg",
       "comments": "Sense obrir",
+      "photo": "9788448626662.jpeg",
       "soldDate": "",
-      "id": "6"
+      "idUser": 3
     },
     {
       "idUser": 4,
@@ -2187,13 +2187,81 @@
       "id": "10"
     },
     {
-      "id": 11,
+      "id": "11",
       "idModule": "0012",
       "publisher": "alexBooks",
       "price": 35,
       "pages": 200,
       "status": "good",
       "comments": "Este es un lirbo para hacer una prueba",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "12",
+      "idModule": "0013",
+      "publisher": "Alex asdasd",
+      "price": 222,
+      "pages": 22222,
+      "status": "new",
+      "comments": "sfdfsdf",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "13",
+      "idModule": "0021",
+      "publisher": "nlascjopasdjopasdjopasdjopasdasd",
+      "price": 344,
+      "pages": 12123,
+      "status": "good",
+      "comments": "asdasdasd",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "14",
+      "idModule": "0376",
+      "publisher": "McGraw-Hill",
+      "price": 5000,
+      "pages": 2,
+      "status": "new",
+      "comments": "Sense obrir",
+      "photo": "9788448626662.jpeg",
+      "soldDate": "",
+      "idUser": 3
+    },
+    {
+      "id": "15",
+      "idModule": "0376",
+      "publisher": "McGraw-Hill",
+      "price": 75,
+      "pages": 2,
+      "status": "new",
+      "comments": "Sense obrir",
+      "photo": "9788448626662.jpeg",
+      "soldDate": "",
+      "idUser": 3
+    },
+    {
+      "id": "16",
+      "idModule": "0028",
+      "publisher": "asdasds",
+      "price": 222,
+      "pages": 2220,
+      "status": "digital",
+      "comments": "asdasdasdasdas ALex",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "17",
+      "idModule": "0020",
+      "publisher": "Alex",
+      "price": 55,
+      "pages": 55,
+      "status": "new",
+      "comments": "Alex Alex Alex Prueba",
       "photo": "",
       "soldDate": ""
     }

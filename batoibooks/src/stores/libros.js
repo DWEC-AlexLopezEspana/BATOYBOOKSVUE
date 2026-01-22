@@ -6,7 +6,7 @@ export const store = {
     state: reactive({
         libros: [],
         libroEnEdicion: null,
-        mensajes:[],
+        mensajes: [],
     }),
 
     async allLibros() {
@@ -14,7 +14,7 @@ export const store = {
             if (this.debug) console.log("allLibros triggered");
             this.state.libros = await api.libros.getAll();
         } catch (error) {
-            this.agregarMensaje("Error en allLibros:"+error, "error");
+            this.agregarMensaje("Error en allLibros:" + error, "error");
         }
     },
 
@@ -23,7 +23,7 @@ export const store = {
             if (this.debug) console.log("oneLibro triggered", idLibro);
             return await api.libros.getOne(idLibro);
         } catch (error) {
-             this.agregarMensaje(`Error al obtener libro con id ${idLibro}: ${error}`, "error");
+            this.agregarMensaje(`Error al obtener libro con id ${idLibro}: ${error}`, "error");
             return null;
         }
     },
@@ -34,7 +34,7 @@ export const store = {
             const nuevoLibro = await api.libros.create(libro);
             this.state.libros.push(nuevoLibro);
         } catch (error) {
-            this.agregarMensaje("Error al añadir libro:"+ error, "error");
+            this.agregarMensaje("Error al añadir libro:" + error, "error");
         }
     },
 
@@ -45,7 +45,7 @@ export const store = {
             const idNum = idLibro;
             this.state.libros = this.state.libros.filter(l => Number(l.id) !== Number(idNum));
         } catch (error) {
-             this.agregarMensaje(`Error al eliminar libro con id ${idLibro}:${error}`, "error");
+            this.agregarMensaje(`Error al eliminar libro con id ${idLibro}:${error}`, "error");
         }
     },
 
@@ -56,7 +56,7 @@ export const store = {
             const index = this.state.libros.findIndex(l => l.id === libro.id);
             if (index !== -1) this.state.libros[index] = actualizado;
         } catch (error) {
-            this.agregarMensaje("Error al actualizar libro:"+ error, "error");
+            this.agregarMensaje("Error al actualizar libro:" + error, "error");
         }
     },
 
@@ -72,7 +72,7 @@ export const store = {
         const mensaje = {
             id: Date.now(),
             texto: mensajeTexto,
-            tipo:tipo
+            tipo: tipo
         };
         this.state.mensajes.push(mensaje);
 

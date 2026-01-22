@@ -2,53 +2,63 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { store as modulos } from '../stores/modulos.js';
 import { store as libros } from '../stores/libros.js';
+import { useRoute, useRouter } from 'vue-router';
 
-onMounted(async () => {
-    await modulos.allModulos();
-    await libros.allLibros();
-});
+const router = useRouter()
+const route = useRoute();
 
-const nuevoLibro = reactive({
+const libro = reactive({
     id: null,
     idModule: '',
     publisher: '',
     price: 0,
     pages: 0,
-    status: 'Nuevo',
+    status: 'new',
     comments: '',
     photo: '',
     soldDate: ''
 });
-const libro = computed(() => libros.state.libroEnEdicion);
-const esEdicion = computed(() => libros.state.libroEnEdicion !== null);
+const id = route.params.id;
 
-/*watch(
-    () => libros.state.libroEnEdicion,
-    (libro) => {
-        if (libro) {
-            Object.assign(nuevoLibro, libro);
+
+onMounted(async () => {
+    await modulos.allModulos();
+    await libros.allLibros();
+    if(id){
+        const libroFinal = await libros.oneLibro(id);
+        if(libroFinal){
+            Object.assign(libro, libroFinal);
+            libros.setLibroEnEdicio(libroFinal);
         }
     }
-)*/
+
+
+});
+
+
+const esEdicion = computed(() => libros.state.libroEnEdicion !== null);
+
+
 
 
 
 const resetearFormulario = () => {
-    Object.assign(nuevoLibro, {
+    Object.assign(libro,{
         id: null,
         idModule: '',
         publisher: '',
         price: 0,
         pages: 0,
-        status: 'Nuevo',
+        status: 'new',
         comments: '',
         photo: '',
         soldDate: ''
     });
     libros.limpiarLibroEnEdicion();
+    router.push('/')
 }
 const generarId = () => {
-    if (libros.state.libros.length === 0) return 1; 
+    if (libros.state.libros.length === 0) return 1;
     const maxId = Math.max(...libros.state.libros.map(l => l.id || 0));
     return maxId + 1;
 }
@@ -56,11 +66,11 @@ const generarId = () => {
 
 const crearLibro = async () => {
     if (esEdicion.value) {
-        await libros.updateLibro(nuevoLibro);
+        await libros.updateLibro(libro);
         libros.limpiarLibroEnEdicion();
     } else {
-        nuevoLibro.id = String(generarId());
-        await libros.addLibro(nuevoLibro);
+        libro.id = String(generarId());
+        await libros.addLibro(libro);
     }
 
     resetearFormulario();
@@ -71,15 +81,16 @@ const crearLibro = async () => {
 
 <template>
     <div class="formularioLibro" id="formularioLibro">
-        <h2>Agregar Nuevo Libro</h2>
+        <h2 v-if="!esEdicion">Agregar Nuevo Libro</h2>
+        <h2 v-else>Actualizar Libro</h2>
         <form @submit.prevent="crearLibro">
             <div>
                 <h4>ID:</h4>
-                <input placeholder="ID del libro" v-model="id">
+                <input placeholder="ID del libro" v-model="libro.id" readonly>
             </div>
             <div>
                 <h4>Module:</h4>
-                <select v-model="nuevoLibro.idModule" required>
+                <select v-model="libro.idModule" required>
                     <option value="">Selecciona un módulo</option>
                     <option v-for="modulo in modulos.state.modulos" :key="modulo.id" :value="modulo.code">
                         {{ modulo.cliteral }}
@@ -90,29 +101,29 @@ const crearLibro = async () => {
             <div>
                 <h4>Editorial:</h4>
                 <input type="text" name="editorial" id="editorial" placeholder="Ingrese la editorial (libro)" required
-                    v-model="nuevoLibro.publisher">
+                    v-model="libro.publisher">
             </div>
             <div>
                 <h4>Precio:</h4>
                 <input type="number" name="precio" id="precio" min="0" step="0.01" placeholder="Precio del libro"
-                    v-model="nuevoLibro.price" required>
+                    v-model="libro.price" required>
             </div>
             <div>
                 <h4>Páginas</h4>
                 <input type="number" name="paginas" id="paginas" min="1" placeholder="Número de páginas"
-                    v-model="nuevoLibro.pages" required>
+                    v-model="libro.pages" required>
 
             </div>
             <div>
                 <h4>Estado</h4>
-                <label><input type="radio" value="new" v-model="nuevoLibro.status">Nuevo</label>
-                <label><input type="radio" value="good" v-model="nuevoLibro.status">Bueno</label>
-                <label><input type="radio" value="bad" v-model="nuevoLibro.status">Malo</label>
-                <label><input type="radio" value="digital" v-model="nuevoLibro.status">Digital</label>
+                <label><input type="radio" value="new" v-model="libro.status">Nuevo</label>
+                <label><input type="radio" value="good" v-model="libro.status">Bueno</label>
+                <label><input type="radio" value="bad" v-model="libro.status">Malo</label>
+                <label><input type="radio" value="digital" v-model="libro.status">Digital</label>
             </div>
             <div>
                 <h4 for="comentario">Comentarios</h4>
-                <textarea v-model="nuevoLibro.comments" rows="4" cols="50"
+                <textarea v-model="libro.comments" rows="4" cols="50"
                     placeholder="Escribe tu comentario aquí..."></textarea>
             </div>
             <div>

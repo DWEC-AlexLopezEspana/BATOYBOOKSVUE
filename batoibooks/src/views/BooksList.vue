@@ -1,7 +1,9 @@
 <script setup>
-import BookItem from './BookItem.vue';
+import BookItem from '../components/BookItem.vue';
 import { computed, onMounted } from 'vue';
 import { store as libros } from '../stores/libros.js';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 
 
 
@@ -25,7 +27,8 @@ const borrarLibro = async (idLibro) => {
     }
 }
 const editLibro = async (libro) => {
-    libros.setLibroEnEdicio(libro);
+    console.log(libro)
+    router.push(`/edit/${String(libro.id)}`);
 }
 
 </script>

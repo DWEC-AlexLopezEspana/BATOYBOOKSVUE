@@ -14,7 +14,7 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['borrarLibro','editLibro']);
+const emit = defineEmits(['borrarLibro', 'editLibro']);
 
 onMounted(async () => {
     await modulos.allModulos();
@@ -22,21 +22,21 @@ onMounted(async () => {
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate();         
-    const month = date.getMonth() + 1;  
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;  
+    return `${day}/${month}/${year}`;
 };
 const nombreModulo = computed(() => {
     const mod = modulos.state.modulos.find(m => m.code === props.libro.idModule);
     return mod ? mod.cliteral : 'Módulo desconocido';
 });
 
-const delLibro = () =>{
+const delLibro = () => {
     emit('borrarLibro', props.libro.id);
 }
-const editLibro = () =>{
-    emit('editLibro',props.libro);
+const editLibro = () => {
+    emit('editLibro', props.libro);
 }
 
 
@@ -80,11 +80,12 @@ const editLibro = () =>{
     margin: 10px;
     padding: 15px;
     box-sizing: border-box;
-    box-shadow: 0 4px 6px rgb(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgb(0, 0, 0, 0.1);
     transition: transform 0.2s;
     display: inline-block;
 }
-.cardLibro:hover{
+
+.cardLibro:hover {
     transform: translateY(-5px);
 }
 </style>
