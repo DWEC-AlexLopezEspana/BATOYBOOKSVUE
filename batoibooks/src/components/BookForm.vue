@@ -22,14 +22,14 @@ const nuevoLibro = reactive({
 const libro = computed(() => libros.state.libroEnEdicion);
 const esEdicion = computed(() => libros.state.libroEnEdicion !== null);
 
-watch(
+/*watch(
     () => libros.state.libroEnEdicion,
     (libro) => {
         if (libro) {
             Object.assign(nuevoLibro, libro);
         }
     }
-)
+)*/
 
 
 
@@ -48,7 +48,7 @@ const resetearFormulario = () => {
     libros.limpiarLibroEnEdicion();
 }
 const generarId = () => {
-    if (libros.state.libros.length === 0) return 1; // Si no hay libros, empezamos en 1
+    if (libros.state.libros.length === 0) return 1; 
     const maxId = Math.max(...libros.state.libros.map(l => l.id || 0));
     return maxId + 1;
 }

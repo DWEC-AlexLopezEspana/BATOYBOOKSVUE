@@ -22,10 +22,10 @@ onMounted(async () => {
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate();         // día del mes
-    const month = date.getMonth() + 1;  // meses empiezan en 0
+    const day = date.getDate();         
+    const month = date.getMonth() + 1;  
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;   // formato día/mes/año
+    return `${day}/${month}/${year}`;  
 };
 const nombreModulo = computed(() => {
     const mod = modulos.state.modulos.find(m => m.code === props.libro.idModule);
