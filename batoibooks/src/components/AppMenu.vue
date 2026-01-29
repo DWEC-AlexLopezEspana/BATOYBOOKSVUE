@@ -1,16 +1,8 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink } from 'vue-router'
 </script>
 
 <template>
-    <!-- <nav>
-        <ul>
-            <li><a href="#acerca-de">Ver Libros</a></li>
-            <li><a href="#formularioLibro">Añadir Libro</a></li>
-            <li><a href="#acerca-de">Acerca de...</a></li>
-        </ul>
-    </nav>
-    -->
     <nav>
         <ul>
             <router-link to="/" name="libros">Ver Libros</router-link>
