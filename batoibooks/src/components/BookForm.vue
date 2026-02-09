@@ -3,6 +3,8 @@ import { computed, reactive, watch } from 'vue'
 import { useModulosStore } from '../stores/modulos.js'
 import { useLibrosStore } from '../stores/libros.js'
 import { useRoute, useRouter } from 'vue-router'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import * as yup from 'yup'
 
 const router = useRouter()
 const route = useRoute()
@@ -25,6 +27,34 @@ const libro = reactive({
 
 // Computed del id de la ruta
 const id = computed(() => route.params.id)
+
+const schema = yup.object({
+  idModule: yup
+    .string()
+    .required('El módulo es obligatorio'),
+
+  publisher: yup
+    .string()
+    .required('La editorial es obligatoria'),
+
+  price: yup
+    .number()
+    .typeError('El precio debe ser un número')
+    .required('El precio es obligatorio')
+    .min(0, 'El precio no puede ser negativo'),
+
+  pages: yup
+    .number()
+    .typeError('Las páginas deben ser un número')
+    .required('El número de páginas es obligatorio')
+    .integer('Las páginas deben ser un número entero')
+    .min(0, 'Las páginas no pueden ser negativas'),
+
+  status: yup
+    .string()
+    .required('El estado es obligatorio')
+})
+
 
 // Watch sobre el id de la ruta
 watch(
@@ -81,6 +111,20 @@ const generarId = () => {
 
 // Guardar o actualizar libro
 const crearLibro = async () => {
+
+  if (!esEdicion.value) {
+    const duplicado = librosStore.libros.find(
+      l =>
+        l.idModule === libro.idModule &&
+        l.publisher === libro.publisher
+    )
+
+    if (duplicado) {
+      alert('Este libro ya existe para este usuario')
+      return
+    }
+  }
+
   if (esEdicion.value) {
     await librosStore.updateLibro(libro)
     librosStore.limpiarLibroEnEdicion()
@@ -114,7 +158,7 @@ const resetearFormulario = () => {
     <h2 v-if="!esEdicion">Agregar Nuevo Libro</h2>
     <h2 v-else>Actualizar Libro</h2>
 
-    <form @submit.prevent="crearLibro">
+    <Form :validation-schema="schema" @submit="crearLibro">
       <div>
         <h4>ID:</h4>
         <input placeholder="ID del libro" v-model="libro.id" readonly />
@@ -122,35 +166,50 @@ const resetearFormulario = () => {
 
       <div>
         <h4>Module:</h4>
-        <select v-model="libro.idModule" required>
+        <Field name="idModule" as="select" v-model="libro.idModule" required>
           <option value="">Selecciona un módulo</option>
           <option v-for="modulo in modulosStore.modulos" :key="modulo.id" :value="modulo.code">
             {{ modulo.cliteral }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="idModule" />
       </div>
 
       <div>
         <h4>Editorial:</h4>
-        <input type="text" placeholder="Ingrese la editorial (libro)" v-model="libro.publisher" required />
+        <Field name="publisher" type="text" placeholder="Ingrese la editorial (libro)" v-model="libro.publisher"
+          required />
+        <ErrorMessage name="publisher" />
       </div>
 
       <div>
         <h4>Precio:</h4>
-        <input type="number" min="0" step="0.01" placeholder="Precio del libro" v-model="libro.price" required />
+        <Field name="price" type="number" min="0" step="0.01" placeholder="Precio del libro" v-model="libro.price"
+          required />
+        <ErrorMessage name="price" />
       </div>
 
       <div>
         <h4>Páginas</h4>
-        <input type="number" min="1" placeholder="Número de páginas" v-model="libro.pages" required />
+        <Field name="pages" type="number" min="1" placeholder="Número de páginas" v-model="libro.pages" required />
+        <ErrorMessage name="pages" />
       </div>
 
       <div>
         <h4>Estado</h4>
-        <label><input type="radio" value="new" v-model="libro.status" /> Nuevo</label>
-        <label><input type="radio" value="good" v-model="libro.status" /> Bueno</label>
-        <label><input type="radio" value="bad" v-model="libro.status" /> Malo</label>
-        <label><input type="radio" value="digital" v-model="libro.status" /> Digital</label>
+        <label>
+          <Field type="radio" name="status" value="new" v-model="libro.status" /> Nuevo
+        </label>
+        <label>
+          <Field type="radio" name="status" value="good" v-model="libro.status" /> Bueno
+        </label>
+        <label>
+          <Field type="radio" name="status" value="bad" v-model="libro.status" /> Malo
+        </label>
+        <label>
+          <Field type="radio" name="status" value="digital" v-model="libro.status" /> Digital
+        </label>
+        <ErrorMessage name="status" />
       </div>
 
       <div>
@@ -163,6 +222,121 @@ const resetearFormulario = () => {
         <button type="submit" v-else>Guardar</button>
         <button type="reset" @click="resetearFormulario">Reset</button>
       </div>
-    </form>
+    </Form>
   </div>
 </template>
+<style scoped>
+.formularioLibro {
+  max-width: 650px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.formularioLibro h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+/* Grupos */
+.formularioLibro>form>div {
+  margin-bottom: 1.2rem;
+}
+
+.formularioLibro h4 {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+/* Inputs */
+.formularioLibro input,
+.formularioLibro select,
+.formularioLibro textarea {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formularioLibro input:focus,
+.formularioLibro select:focus,
+.formularioLibro textarea:focus {
+  outline: none;
+  border-color: #42b983;
+  box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.2);
+}
+
+.formularioLibro input[readonly] {
+  background-color: #f4f4f4;
+  cursor: not-allowed;
+}
+
+/* Radios */
+.formularioLibro label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.formularioLibro input[type="radio"] {
+  margin-right: 0.4rem;
+}
+
+/* Errores de validación */
+.formularioLibro .error,
+.formularioLibro span {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Botones */
+.formularioLibro button {
+  padding: 0.55rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-right: 0.5rem;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.formularioLibro button[type="submit"] {
+  background-color: #42b983;
+  color: white;
+}
+
+.formularioLibro button[type="submit"]:hover {
+  background-color: #36a174;
+  transform: translateY(-1px);
+}
+
+.formularioLibro button[type="reset"] {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
+
+.formularioLibro button[type="reset"]:hover {
+  background-color: #aab2b7;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .formularioLibro {
+    padding: 1.5rem;
+  }
+
+  .formularioLibro label {
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+}
+</style>
